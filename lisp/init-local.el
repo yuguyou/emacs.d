@@ -1,6 +1,8 @@
 (provide 'init-local)
 
 
+(add-to-list 'load-path (expand-file-name "lisp/local" user-emacs-directory))
+(require 'evernote-mode)
 (require 'tabbar)
 (tabbar-mode 1)
 (evil-mode 1)
