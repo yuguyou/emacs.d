@@ -1,8 +1,26 @@
 (provide 'init-local)
 
-
 (add-to-list 'load-path (expand-file-name "lisp/local" user-emacs-directory))
+
+(require 'cygwin-mount)
+(cygwin-mount-activate)
+
+;; 印象笔记
 (require 'evernote-mode)
+(require 'evernote-client)
+
+(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
+(setq evernote-username "869019589@qq.com")
+;; (setq evernote-password-cache "")
+(setq evernote-developer-token "S=s323:U=28c7925:E=1616b09f889:C=15a1358cc58:P=1cd:A=en-devtoken:V=2:H=a34a992b5c40e45d6528d605b36af1cb")
+(global-set-key "\C-cec" 'evernote-create-note)
+(global-set-key "\C-ceo" 'evernote-open-note)
+(global-set-key "\C-ces" 'evernote-search-notes)
+(global-set-key "\C-ceS" 'evernote-do-saved-search)
+(global-set-key "\C-cew" 'evernote-write-note)
+(global-set-key "\C-cep" 'evernote-post-region)
+(global-set-key "\C-ceb" 'evernote-browser)
+
 (require 'tabbar)
 (tabbar-mode 1)
 (evil-mode 1)
