@@ -5,22 +5,6 @@
 (require 'cygwin-mount)
 (cygwin-mount-activate)
 
-;; 印象笔记
-(require 'evernote-mode)
-(require 'evernote-client)
-
-(setq evernote-enml-formatter-command '("w3m" "-dump" "-I" "UTF8" "-O" "UTF8"))
-(setq evernote-username "869019589@qq.com")
-;; (setq evernote-password-cache "")
-(setq evernote-developer-token "S=s323:U=28c7925:E=1616b09f889:C=15a1358cc58:P=1cd:A=en-devtoken:V=2:H=a34a992b5c40e45d6528d605b36af1cb")
-(global-set-key "\C-cec" 'evernote-create-note)
-(global-set-key "\C-ceo" 'evernote-open-note)
-(global-set-key "\C-ces" 'evernote-search-notes)
-(global-set-key "\C-ceS" 'evernote-do-saved-search)
-(global-set-key "\C-cew" 'evernote-write-note)
-(global-set-key "\C-cep" 'evernote-post-region)
-(global-set-key "\C-ceb" 'evernote-browser)
-
 (require 'tabbar)
 (tabbar-mode 1)
 (evil-mode 1)
@@ -71,3 +55,24 @@
 (setq tab-width 2)
 (setq scroll-step 1 scroll-margin 2 scroll-conservatively 10000)
 
+
+;; 支持emacs和外部程序的粘贴
+(setq x-select-enable-clipboard t)
+;; use xsel to copy/paste in emacs-nox
+(unless window-system
+  (when (getenv "DISPLAY")
+    (defun xsel-cut-function (text &optional push)
+      (with-temp-buffer
+        (insert text)
+        (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")
+      )
+    )
+    (defun xsel-paste-function ()
+      (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
+        (unless (string= (car kill-ring) xsel-output) xsel-output)
+      )
+      )
+    (setq interprogram-cut-function 'xsel-cut-function)
+    (setq interprogram-paste-function 'xsel-paste-function)
+  )
+)
