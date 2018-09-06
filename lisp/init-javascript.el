@@ -1,6 +1,8 @@
 (maybe-require-package 'json-mode)
 (maybe-require-package 'js2-mode)
 (maybe-require-package 'coffee-mode)
+(maybe-require-package 'typescript-mode)
+(maybe-require-package 'prettier-js)
 
 (defcustom preferred-javascript-mode
   (first (remove-if-not #'fboundp '(js2-mode js-mode)))
@@ -23,8 +25,7 @@
 ;; js2-mode
 
 ;; Change some defaults: customize them to override
-(setq-default js2-basic-offset 2
-              js2-bounce-indent-p nil)
+(setq-default js2-bounce-indent-p nil)
 (after-load 'js2-mode
   ;; Disable js2 mode's syntax error highlighting by default...
   (setq-default js2-mode-show-parse-errors nil
@@ -39,8 +40,7 @@
 
   (add-hook 'js2-mode-hook (lambda () (setq mode-name "JS2")))
 
-  (after-load 'js2-mode
-    (js2-imenu-extras-setup)))
+  (js2-imenu-extras-setup))
 
 ;; js-mode
 (setq-default js-indent-level preferred-javascript-indent-level)
@@ -49,12 +49,6 @@
 (add-to-list 'interpreter-mode-alist (cons "node" preferred-javascript-mode))
 
 
-;; Javascript nests {} and () a lot, so I find this helpful
-
-(require-package 'rainbow-delimiters)
-(dolist (hook '(js2-mode-hook js-mode-hook json-mode-hook))
-  (add-hook hook 'rainbow-delimiters-mode))
-
 
 (when (and (executable-find "ag")
            (maybe-require-package 'xref-js2))
@@ -79,7 +73,7 @@
 ;; ---------------------------------------------------------------------------
 
 (when (maybe-require-package 'js-comint)
-  (setq inferior-js-program-command "js")
+  (setq inferior-js-program-command "node")
 
   (defvar inferior-js-minor-mode-map (make-sparse-keymap))
   (define-key inferior-js-minor-mode-map "\C-x\C-e" 'js-send-last-sexp)
@@ -103,6 +97,14 @@
   (after-load 'skewer-mode
     (add-hook 'skewer-mode-hook
               (lambda () (inferior-js-keys-mode -1)))))
+
+
+
+(when (maybe-require-package 'add-node-modules-path)
+  (after-load 'typescript-mode
+    (add-hook 'typescript-mode-hook 'add-node-modules-path))
+  (after-load 'js2-mode
+    (add-hook 'js2-mode-hook 'add-node-modules-path)))
 
 
 (provide 'init-javascript)
