@@ -1,66 +1,53 @@
-;;; Find and load the correct package.el
-
-;; When switching between Emacs 23 and 24, we always use the bundled package.el in Emacs 24
-(let ((package-el-site-lisp-dir
-       (expand-file-name "site-lisp/package" user-emacs-directory)))
-  (when (and (file-directory-p package-el-site-lisp-dir)
-             (> emacs-major-version 23))
-    (message "Removing local package.el from load-path to avoid shadowing bundled version")
-    (setq load-path (remove package-el-site-lisp-dir load-path))))
-
 (require 'package)
+
+
+;;; Install into separate package dirs for each Emacs version, to prevent bytecode incompatibility
+(let ((versioned-package-dir
+       (expand-file-name (format "elpa-%s.%s" emacs-major-version emacs-minor-version)
+                         user-emacs-directory)))
+  (setq package-user-dir versioned-package-dir))
 
 
 
 ;;; Standard package repositories
 
-(when (< emacs-major-version 24)
-  ;; Mainly for ruby-mode
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/")))
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;; Official MELPA Mirror, in case necessary.
+  ;;(add-to-list 'package-archives (cons "melpa-mirror" (concat proto "://www.mirrorservice.org/sites/melpa.org/packages/")) t)
+  (if (< emacs-major-version 24)
+      ;; For important compatibility libraries like cl-lib
+      (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))
+    (unless no-ssl
+      ;; Force SSL for GNU ELPA
+      (setcdr (assoc "gnu" package-archives) "https://elpa.gnu.org/packages/"))))
 
 ;; We include the org repository for completeness, but don't normally
 ;; use it.
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
-;;; Also use Melpa for most packages
-(add-to-list 'package-archives `("melpa" . ,(if (< emacs-major-version 24)
-                                                "http://melpa.org/packages/"
-                                              "https://melpa.org/packages/")))
-
-
-
-;; If gpg cannot be found, signature checking will fail, so we
-;; conditionally enable it according to whether gpg is available. We
-;; re-run this check once $PATH has been configured
-(defun sanityinc/package-maybe-enable-signatures ()
-  (setq package-check-signature (when (executable-find "gpg") 'allow-unsigned)))
-
-(sanityinc/package-maybe-enable-signatures)
-(after-load 'init-exec-path
-  (sanityinc/package-maybe-enable-signatures))
-
 
 
 ;;; On-demand installation of packages
+
+(defvar sanityinc/required-packages nil)
 
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
 If NO-REFRESH is non-nil, the available package lists will not be
 re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (if (boundp 'package-selected-packages)
-            ;; Record this as a package the user installed explicitly
-            (package-install package nil)
-          (package-install package))
-      (progn
-        (package-refresh-contents)
-        (require-package package min-version t)))))
-
+  (let ((available
+         (or (package-installed-p package min-version)
+             (if (or (assoc package package-archive-contents) no-refresh)
+                 (package-install package)
+               (progn
+                 (package-refresh-contents)
+                 (require-package package min-version t))))))
+    (prog1 available
+      (when (and available (boundp 'package-selected-packages))
+        (add-to-list 'sanityinc/required-packages package)))))
 
 (defun maybe-require-package (package &optional min-version no-refresh)
   "Try to install PACKAGE, and return non-nil if successful.
@@ -71,7 +58,7 @@ locate PACKAGE."
   (condition-case err
       (require-package package min-version no-refresh)
     (error
-     (message "Couldn't install package `%s': %S" package err)
+     (message "Couldn't install optional package `%s': %S" package err)
      nil)))
 
 
@@ -80,6 +67,14 @@ locate PACKAGE."
 (setq package-enable-at-startup nil)
 (package-initialize)
 
+;; package.el updates the saved version of package-selected-packages correctly only
+;; after custom-file has been loaded, which is a bug. We work around this by adding
+;; the required packages to package-selected-packages after startup is complete.
+(when (fboundp 'package--save-selected-packages)
+  (require-package 'seq)
+  (add-hook 'after-init-hook
+            (lambda () (package--save-selected-packages
+                   (seq-uniq (append sanityinc/required-packages package-selected-packages))))))
 
 
 (require-package 'fullframe)
