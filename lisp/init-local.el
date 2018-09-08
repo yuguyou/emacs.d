@@ -1,13 +1,16 @@
-(provide 'init-local)
-
 (add-to-list 'load-path (expand-file-name "lisp/local" user-emacs-directory))
 
-(require 'cygwin-mount)
-(cygwin-mount-activate)
+;; 安装melpa插件或设置设置melpa插件默认配置
+(require 'init-melpa-packages)
 
+
+;; (require 'cygwin-mount)
+;; (cygwin-mount-activate)
+
+
+;; tab标签插件
 (require 'tabbar)
 (tabbar-mode 1)
-(evil-mode 1)
 (global-set-key [(meta >)] 'tabbar-forward)
 (global-set-key [(meta L)] 'tabbar-backward)
 ; close default tabs，and move all files into one group
@@ -32,10 +35,10 @@
 (set-face-attribute 'tabbar-unselected nil
                     :inherit 'tabbar-default
                     :box '(:line-width 3 :color "gray"))
-
 ;; USEFUL: set tabbar's separator gap
 (custom-set-variables '(tabbar-separator (quote (1.5))))
 (put 'scrol-left 'disabled nil)
+
 
 
 ;; 显示时间
@@ -43,8 +46,10 @@
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
 
+
 ;; 显示行号
 (global-linum-mode t)
+
 
 ;; 显示行列
 (setq column-number-mode t)
@@ -76,3 +81,6 @@
     (setq interprogram-paste-function 'xsel-paste-function)
   )
 )
+
+
+(provide 'init-local)
