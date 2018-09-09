@@ -1,18 +1,16 @@
 (add-to-list 'load-path (expand-file-name "lisp/local" user-emacs-directory))
 
+
 ;; 安装melpa插件或设置设置melpa插件默认配置
-(require 'init-melpa-packages)
-
-
-;; (require 'cygwin-mount)
-;; (cygwin-mount-activate)
+(require 'init-online-packages)
 
 
 ;; tab标签插件
 (require 'tabbar)
 (tabbar-mode 1)
-(global-set-key [(meta >)] 'tabbar-forward)
-(global-set-key [(meta L)] 'tabbar-backward)
+;; 配置切换tab快捷键
+(global-set-key [(C-next)] 'tabbar-forward)
+(global-set-key [(C-prior)] 'tabbar-backward)
 ; close default tabs，and move all files into one group
 (setq tabbar-buffer-list-function
     (lambda ()
@@ -26,19 +24,21 @@
 
 ;;set tabbar's backgroud color
 (set-face-attribute 'tabbar-default nil
-                    :background "gray"
-                    :foreground "gray30")
-(set-face-attribute 'tabbar-selected nil
-                    :inherit 'tabbar-default
-                    :background "green"
-                    :box '(:line-width 3 :color "DarkGoldenrod") )
+                    :background "#333333"
+                    :foreground "#eeeeee")
+
 (set-face-attribute 'tabbar-unselected nil
                     :inherit 'tabbar-default
-                    :box '(:line-width 3 :color "gray"))
+                    :box '(:line-width 1 :color "gray30"))
+
+(set-face-attribute 'tabbar-selected nil
+                    :inherit 'tabbar-default
+                    :background "#36fe4f"
+                    :box '(:line-width 1 :color "#36fe4f"))
+
 ;; USEFUL: set tabbar's separator gap
 (custom-set-variables '(tabbar-separator (quote (1.5))))
 (put 'scrol-left 'disabled nil)
-
 
 
 ;; 显示时间
