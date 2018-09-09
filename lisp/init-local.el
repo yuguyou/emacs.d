@@ -54,6 +54,12 @@
 ;; 显示行列
 (setq column-number-mode t)
 
+
+;; 自动保存/恢复编辑环境
+;; 不自动恢复编辑环境使用 emacs --no-desktop
+(desktop-save-mode 1)
+
+
 (define-key global-map [C-@] 'set-mark-command)
 (setq default-tab-width 2)
 (setq c-basic-offset 4)

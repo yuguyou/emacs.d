@@ -1,5 +1,5 @@
-;; 安装melpa插件或设置设置melpa插件默认配置
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 安装melpa插件或设置设置melpa插件默认配置 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 ;; 安装vim模拟器
@@ -24,9 +24,9 @@
 
 ;; 安装主题
 (require-package 'cyberpunk-theme)
-; Cyberpunk Theme
-; Grand Shell Theme
-; Ujelly Theme
+;; Cyberpunk Theme
+;; Grand Shell Theme
+;; Ujelly Theme
 (when (maybe-require-package 'cyberpunk-theme)
   (load-theme 'cyberpunk))
 
@@ -37,7 +37,26 @@
   (color-theme-approximate-on))
 
 
+;; evil-leader
+(require-package 'evil-leader)
 
+
+;; 将搜索高亮保持到下一次搜索
+(require-package 'evil-search-highlight-persist)
+(global-evil-search-highlight-persist)
+;; C-x SPX 清除高亮
+(evil-leader/set-key "SPC" 'evil-search-highlight-persist-remove-all)
+
+
+;; 显示当前文件函数列表,可以直接跳转,完全可配置,支持所有语言
+;; 使用
+;;   M-x imenus-mode-buffers
+;;   M-x imenus
+(require-package 'imenu)
+
+
+;; jsx 语法解析
+;; (require-package 'rjsx-mode)
 
 
 (provide 'init-online-packages)

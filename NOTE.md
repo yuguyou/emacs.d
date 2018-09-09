@@ -65,6 +65,11 @@ C-s
 
 ### 常用快捷键
 /************************************/
+C-h-h    查看帮助信息
+C-h b    查看键值绑定信息 (重要)
+C-h k    查看一个键值用法及源码
+C-h o    查看一个变量或函数用法及源码
+/************************************/
 基本命令
 C-x C-f   打开/新建文件
 C-x C-s   保存当前缓冲区
@@ -239,6 +244,32 @@ y   复制
 #### evil-visualstar
 * 匹配v/V选中的item, *向前匹配, #向后匹配
 
+#### evil-search-highlight-persist
+* 将搜索高亮保持到下一次搜索
+* 用法:
+```
+(require-package 'evil-search-highlight-persist)
+(global-evil-search-highlight-persist t)
+;; C-x SPX 清除高亮
+(evil-leader/set-key "SPC" 'evil-search-highlight-persist-remove-all)
+```
+
 #### color-theme-approximate
 * 大多数Emacs主题在终端环境(使用emacs -nw会在终端环境下运行emacs)下都很糟糕. 几乎所有的主题都有这个问题. 不过这种情况可以通过安装 color-theme-approximate 这个package得到有效改善. 这个package将色彩转换为终端下的等价色. 安装好 color-theme-approximate 后,再将 (color-theme-approximate-on) 添加到你的 .emacs 配置中. 如果没有生效的话,试着把这一行的位置放后一点再试试.
+
+#### js2-mode
+* javascript开发神器
+
+#### rjsx-mode
+* jsx 语法解析
+
+#### imenu
+* 显示当前文件函数列表,可以直接跳转,完全可配置,支持所有语言
+```
+M-x imenus-mode-buffers
+M-x imenus
+```
+
+#### web-mode
+* 提供了很好的web配件（HTML、JavaScript、CSS、PHP等）的代码缩进、折叠和高亮等出色的功能。
 
