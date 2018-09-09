@@ -49,14 +49,16 @@
 
 
 ;; 显示当前文件函数列表,可以直接跳转,完全可配置,支持所有语言
-;; 使用
-;;   M-x imenus-mode-buffers
-;;   M-x imenus
-(require-package 'imenu)
+;; 快捷键: M-'
+(require-package 'imenu-list)
+(global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+(setq imenu-list-focus-after-activation t)
+(setq imenu-list-after-jump-hook nil)
+(add-hook 'imenu-list-after-jump-hook #'recenter-top-bottom)
 
 
 ;; jsx 语法解析
-;; (require-package 'rjsx-mode)
+(require-package 'rjsx-mode)
 
 
 (provide 'init-online-packages)
