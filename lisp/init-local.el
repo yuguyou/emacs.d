@@ -55,6 +55,8 @@
 (setq column-number-mode t)
 
 
+;; "Font `tty' is not defined
+(setq desktop-restore-frames nil)
 ;; 自动保存/恢复编辑环境
 ;; 不自动恢复编辑环境使用 emacs --no-desktop
 (desktop-save-mode 1)
