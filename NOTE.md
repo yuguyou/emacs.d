@@ -278,3 +278,5 @@ y   复制
 #### web-mode
 * 提供了很好的web配件（HTML、JavaScript、CSS、PHP等）的代码缩进、折叠和高亮等出色的功能。
 
+#### highlight-indentation && indent-guide
+* 代码缩进提示线
