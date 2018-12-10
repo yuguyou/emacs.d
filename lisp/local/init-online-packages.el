@@ -60,5 +60,13 @@
 ;; jsx 语法解析
 (require-package 'rjsx-mode)
 
+;; 代码缩进提示线
+(require-package 'highlight-indentation)
+(when (maybe-require-package 'highlight-indentation)
+  (highlight-indentation-mode 1))
+
+
+;;(require-package 'indent-guide)
+
 
 (provide 'init-online-packages)
