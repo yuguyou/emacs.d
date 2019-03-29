@@ -58,15 +58,24 @@
 
 
 ;; jsx 语法解析
-(require-package 'rjsx-mode)
+;; (require-package 'rjsx-mode)
+
+;; web-mode 语法解析
+(require-package 'web-mode)
+(when (maybe-require-package 'web-mode)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+
 
 ;; 代码缩进提示线
-(require-package 'highlight-indentation)
-(when (maybe-require-package 'highlight-indentation)
-  (highlight-indentation-mode 1))
+;; (require-package 'highlight-indentation)
+;; (when (maybe-require-package 'highlight-indentation)
+;;   (highlight-indentation-mode 1))
+(require-package 'indent-guide)
+(when (maybe-require-package 'indent-guide)
+  (indent-guide-mode 1))
 
-
-;;(require-package 'indent-guide)
 
 
 (provide 'init-online-packages)
