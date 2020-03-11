@@ -257,6 +257,9 @@ y   复制
 #### color-theme-approximate
 * 大多数Emacs主题在终端环境(使用emacs -nw会在终端环境下运行emacs)下都很糟糕. 几乎所有的主题都有这个问题. 不过这种情况可以通过安装 color-theme-approximate 这个package得到有效改善. 这个package将色彩转换为终端下的等价色. 安装好 color-theme-approximate 后,再将 (color-theme-approximate-on) 添加到你的 .emacs 配置中. 如果没有生效的话,试着把这一行的位置放后一点再试试.
 
+#### vterm
+* https://github.com/akermu/emacs-libvterm, 好用的命令终端
+
 #### js2-mode
 * javascript开发神器
 
@@ -280,3 +283,6 @@ y   复制
 
 #### highlight-indentation && indent-guide
 * 代码缩进提示线
+
+#### tide
+* TypeScript Interactive Development Environment for Emacs
