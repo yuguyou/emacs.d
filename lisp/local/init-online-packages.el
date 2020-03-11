@@ -1,18 +1,12 @@
 ;; 安装melpa插件或设置设置melpa插件默认配置
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
 ;; 安装vim模拟器
 (require-package 'evil)
-;; 启用vim模式
 (when (maybe-require-package 'evil)
   (evil-mode 1))
 
 ;; 安装vim搜索模拟器
 (require-package 'evil-anzu)
-;; [vim搜索模式] 启用evil的evil-anzu插件
 (with-eval-after-load 'evil
   (require 'evil-anzu))
 
@@ -28,11 +22,6 @@
 ;; Ujelly Theme
 (when (maybe-require-package 'cyberpunk-theme)
   (load-theme 'cyberpunk))
-
-;; 保持主题颜色在终端下面时与软件下面一致
-;; (require-package 'color-theme-approximate)
-;; (when (maybe-require-package 'color-theme-approximate)
-;; (color-theme-approximate-on))
 
 ;; evil-leader
 (require-package 'evil-leader)
@@ -108,7 +97,6 @@
 ;; enable typescript-tslint checker
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
-
 ;;javascript
 (setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 
@@ -129,4 +117,5 @@
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
+
 (provide 'init-online-packages)
