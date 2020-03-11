@@ -1,5 +1,8 @@
-;; 安装melpa插件或设置设置melpa插件默认配置 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 安装melpa插件或设置设置melpa插件默认配置
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 ;; 安装vim模拟器
 (require-package 'evil)
@@ -48,13 +51,21 @@
 (setq imenu-list-after-jump-hook nil)
 (add-hook 'imenu-list-after-jump-hook #'recenter-top-bottom)
 
+;; jsx 语法解析
+;; (require-package 'rjsx-mode)
+
 ;; 代码缩进提示线
 ;; (require-package 'highlight-indentation)
 ;; (when (maybe-require-package 'highlight-indentation)
-;;   (highlight-indentation-mode 1))
+;; (highlight-indentation-mode 1))
+
 (require-package 'indent-guide)
 (when (maybe-require-package 'indent-guide)
-  (indent-guide-mode 1))
+  (indent-guide-global-mode 1)
+  ;; 延迟显示时间
+  (setq indent-guide-delay 1)
+  ;; 递归显示缩进线
+  (setq indent-guide-recursive t))
 
 ;; 命令终端
 (require-package 'vterm)
