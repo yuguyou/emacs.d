@@ -141,4 +141,11 @@
 ;         (typescript-mode . tide-hl-identifier-mode)
 ;         (before-save . tide-format-before-save)))
 
+;; Customize ‘evil-undo-system’ for redo functionality. 处理
+
+(require-package 'undo-tree)
+(when (maybe-require-package 'undo-tree)
+  (global-undo-tree-mode)
+  ( evil-set-undo-system 'undo-tree))
+
 (provide 'init-online-packages)
