@@ -1,6 +1,6 @@
-;; 安装melpa插件或设置设置melpa插件默认配置
+;;; 安装melpa插件或设置设置melpa插件默认配置:
 
-;; 安装vim模拟器
+;;; 安装vim模拟器:
 (require-package 'evil)
 (when (maybe-require-package 'evil)
   (evil-mode 1))
@@ -23,6 +23,11 @@
 (when (maybe-require-package 'cyberpunk-theme)
   (load-theme 'cyberpunk))
 
+;; 保持主题颜色在终端下面时与软件下面一致
+(require-package 'color-theme-approximate)
+(when (maybe-require-package 'color-theme-approximate)
+  (color-theme-approximate-on))
+
 ;; evil-leader
 (require-package 'evil-leader)
 
@@ -40,9 +45,6 @@
 (setq imenu-list-after-jump-hook nil)
 (add-hook 'imenu-list-after-jump-hook #'recenter-top-bottom)
 
-;; jsx 语法解析
-;; (require-package 'rjsx-mode)
-
 ;; 代码缩进提示线
 ;; (require-package 'highlight-indentation)
 ;; (when (maybe-require-package 'highlight-indentation)
@@ -57,10 +59,34 @@
   (setq indent-guide-recursive t))
 
 ;; 命令终端
-(require-package 'vterm)
+;; (require-package 'vterm)
+
+;; web-mode 语法解析
+(require-package 'web-mode)
+(when (maybe-require-package 'web-mode)
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-code-indent-offset 2))
+
+;; 使用prettier格式化代码
+(require-package 'prettier-js)
+(add-hook 'js2-mode-hook 'prettier-js-mode)
+(add-hook 'web-mode-hook 'prettier-js-mode)
+(defun enable-minor-mode (my-pair)
+  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+  (if (buffer-file-name)
+      (if (string-match (car my-pair) buffer-file-name)
+          (funcall (cdr my-pair)))))
+(add-hook 'web-mode-hook #'(lambda ()
+                             (enable-minor-mode
+                              '("\\.tsx?\\'" . prettier-js-mode))))
 
 ;; tide: TypeScript Interactive Development Environment for Emacs
-;; Typescript
+(require-package 'tide)
+(require-package 'flycheck)
+(flycheck-mode +1)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;; TS
 (require-package 'company)
 (defun setup-tide-mode ()
   (interactive)
@@ -76,20 +102,13 @@
 ;; aligns annotation to the right hand side
 (setq company-tooltip-align-annotations t)
 ;; formats the buffer before saving
-;; (add-hook 'before-save-hook 'tide-format-before-save)
+(add-hook 'before-save-hook 'tide-format-before-save)
 (add-hook 'typescript-mode-hook #'setup-tide-mode)
+(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 
-;; web-mode 语法解析
-(require-package 'web-mode)
-(when (maybe-require-package 'web-mode)
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-code-indent-offset 2))
-
-;; TSX
-(require-package 'tide)
-(require-package 'flycheck)
-(flycheck-mode +1)
+;;;;;;;;;;;;;;;;;;;;;;;;;; TSX
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
@@ -97,25 +116,36 @@
 ;; enable typescript-tslint checker
 (flycheck-add-mode 'typescript-tslint 'web-mode)
 (setq tide-tsserver-executable "node_modules/typescript/bin/tsserver")
-;;javascript
-(setq tide-format-options '(:insertSpaceAfterFunctionKeywordForAnonymousFunctions t :placeOpenBraceOnNewLineForFunctions nil))
 
-;; JSX
+;;;;;;;;;;;;;;;;;;;;;;;;;; JS
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+;; configure javascript-tide checker to run after your default javascript checker
+;; 无法启动javascript-tide
+;; (flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;; JSX
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "jsx" (file-name-extension buffer-file-name))
               (setup-tide-mode))))
 ;; configure jsx-tide checker to run after your default jsx checker
 (flycheck-add-mode 'javascript-eslint 'web-mode)
-;;(flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+;; (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
 
-(require-package 'use-package)
-(use-package tide
-  :ensure t
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+;(use-package tide
+;  :ensure t
+;  :after (typescript-mode company flycheck)
+;  :hook ((typescript-mode . tide-setup)
+;         (typescript-mode . tide-hl-identifier-mode)
+;         (before-save . tide-format-before-save)))
+
+;; Customize ‘evil-undo-system’ for redo functionality. 处理
+
+(require-package 'undo-tree)
+(when (maybe-require-package 'undo-tree)
+  (global-undo-tree-mode)
+  ( evil-set-undo-system 'undo-tree))
 
 (provide 'init-online-packages)
