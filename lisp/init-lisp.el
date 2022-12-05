@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(setq-default debugger-bury-or-kill 'kill)
+
 (require-package 'elisp-slime-nav)
 (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
@@ -37,8 +39,9 @@
 
 (global-set-key [remap eval-expression] 'pp-eval-expression)
 
-(after-load 'lisp-mode
-  (define-key emacs-lisp-mode-map (kbd "C-x C-e") 'sanityinc/eval-last-sexp-or-region))
+(with-eval-after-load 'lisp-mode
+  (define-key emacs-lisp-mode-map (kbd "C-x C-e") 'sanityinc/eval-last-sexp-or-region)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-e") 'pp-eval-expression))
 
 (when (maybe-require-package 'ipretty)
   (add-hook 'after-init-hook 'ipretty-mode))
@@ -68,7 +71,7 @@ there is no current file, eval the current buffer."
       (eval-buffer)
       (message "Evaluated %s" (current-buffer)))))
 
-(after-load 'lisp-mode
+(with-eval-after-load 'lisp-mode
   (define-key emacs-lisp-mode-map (kbd "C-c C-l") 'sanityinc/load-this-file))
 
 
@@ -106,14 +109,13 @@ there is no current file, eval the current buffer."
       (funcall sanityinc/repl-switch-function sanityinc/repl-original-buffer)
     (error "No original buffer")))
 
-(after-load 'elisp-mode
+(with-eval-after-load 'elisp-mode
   (define-key emacs-lisp-mode-map (kbd "C-c C-z") 'sanityinc/switch-to-ielm))
-(after-load 'ielm
+(with-eval-after-load 'ielm
   (define-key ielm-map (kbd "C-c C-z") 'sanityinc/repl-switch-back))
 
-;; ----------------------------------------------------------------------------
+
 ;; Hippie-expand
-;; ----------------------------------------------------------------------------
 
 (defun set-up-hippie-expand-for-elisp ()
   "Locally set `hippie-expand' completion functions for use with Emacs Lisp."
@@ -122,16 +124,17 @@ there is no current file, eval the current buffer."
   (add-to-list 'hippie-expand-try-functions-list 'try-complete-lisp-symbol-partially t))
 
 
-;; ----------------------------------------------------------------------------
+
 ;; Automatic byte compilation
-;; ----------------------------------------------------------------------------
+
 (when (maybe-require-package 'auto-compile)
+  (setq auto-compile-delete-stray-dest nil)
   (add-hook 'after-init-hook 'auto-compile-on-save-mode)
   (add-hook 'after-init-hook 'auto-compile-on-load-mode))
 
-;; ----------------------------------------------------------------------------
+
 ;; Load .el if newer than corresponding .elc
-;; ----------------------------------------------------------------------------
+
 (setq load-prefer-newer t)
 
 
@@ -156,9 +159,9 @@ there is no current file, eval the current buffer."
        " ")))))
 
 
-;; ----------------------------------------------------------------------------
+
 ;; Enable desired features for all lisp modes
-;; ----------------------------------------------------------------------------
+
 (defun sanityinc/enable-check-parens-on-save ()
   "Run `check-parens' when the current buffer is saved."
   (add-hook 'after-save-hook #'check-parens nil t))
@@ -203,13 +206,9 @@ there is no current file, eval the current buffer."
 (add-to-list 'auto-mode-alist '("\\.emacs-project\\'" . emacs-lisp-mode))
 (add-to-list 'auto-mode-alist '("archive-contents\\'" . emacs-lisp-mode))
 
-(require-package 'cl-lib-highlight)
-(after-load 'lisp-mode
-  (cl-lib-highlight-initialize))
 
-;; ----------------------------------------------------------------------------
+
 ;; Delete .elc files when reverting the .el from VC or magit
-;; ----------------------------------------------------------------------------
 
 ;; When .el files are open, we can intercept when they are modified
 ;; by VC or magit in order to remove .elc files that are likely to
@@ -245,8 +244,8 @@ there is no current file, eval the current buffer."
 
 (require-package 'macrostep)
 
-(after-load 'lisp-mode
-  (define-key emacs-lisp-mode-map (kbd "C-c e") 'macrostep-expand))
+(with-eval-after-load 'lisp-mode
+  (define-key emacs-lisp-mode-map (kbd "C-c x") 'macrostep-expand))
 
 
 
@@ -262,7 +261,7 @@ there is no current file, eval the current buffer."
       (rainbow-mode)))
   (add-hook 'emacs-lisp-mode-hook 'sanityinc/enable-rainbow-mode-if-theme)
   (add-hook 'help-mode-hook 'rainbow-mode)
-  (after-load 'rainbow-mode
+  (with-eval-after-load 'rainbow-mode
     (diminish 'rainbow-mode)))
 
 
@@ -271,26 +270,20 @@ there is no current file, eval the current buffer."
   (add-hook 'emacs-lisp-mode-hook 'highlight-quoted-mode))
 
 
-(when (maybe-require-package 'flycheck)
-  (require-package 'flycheck-package)
-  (after-load 'flycheck
-    (after-load 'elisp-mode
-      (flycheck-package-setup))))
+(when (maybe-require-package 'package-lint-flymake)
+  (add-hook 'emacs-lisp-mode-hook #'package-lint-flymake-setup))
 
 
 
 ;; ERT
-(after-load 'ert
+(with-eval-after-load 'ert
   (define-key ert-results-mode-map (kbd "g") 'ert-results-rerun-all-tests))
 
 
 (maybe-require-package 'cl-libify)
 
 
-(when (maybe-require-package 'flycheck-relint)
-  (after-load 'flycheck
-    (after-load 'elisp-mode
-      (flycheck-relint-setup))))
+(maybe-require-package 'flycheck-relint)
 
 
 
