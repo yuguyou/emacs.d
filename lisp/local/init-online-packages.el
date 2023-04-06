@@ -148,4 +148,8 @@
   (global-undo-tree-mode)
   ( evil-set-undo-system 'undo-tree))
 
+;; all-the-icons
+(when (display-graphic-p)
+  (require 'all-the-icons))
+
 (provide 'init-online-packages)
