@@ -11,7 +11,7 @@
 
 
 ;; 显示行号
-(global-linum-mode t)
+(global-display-line-numbers-mode t)
 
 
 ;; 显示行列
@@ -30,16 +30,6 @@
 (setq c-basic-offset 4)
 (setq tab-width 2)
 (setq scroll-step 1 scroll-margin 2 scroll-conservatively 10000)
-
-;; tabbar
-(require 'awesome-tab)
-(awesome-tab-mode t)
-(setq awesome-tab-height 120)
-(setq awesome-tab-display-icon nil)
-(custom-set-variables
- '(awesome-tab-dark-selected-background-color "white")
- '(awesome-tab-dark-selected-foreground-color "dark magenta")
-)
 
 
 ;; 支持emacs和外部程序的粘贴
@@ -62,6 +52,12 @@
     (setq interprogram-paste-function 'xsel-paste-function)
   )
 )
+
+;; tabbar
+(require 'awesome-tab)
+(awesome-tab-mode t)
+(when (not (display-graphic-p))
+  (setq frame-background-mode 'dark))
 
 
 (provide 'init-local)
