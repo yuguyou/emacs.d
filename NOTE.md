@@ -38,6 +38,13 @@
   alias emacs="emacs -nw"
   ```
 
+* 安装字体
+  ```
+  // 1. 在Emacs内部重新安装字体：
+  M-x all-the-icons-install-fonts
+  // 2. 终端执行强制更新系统字体缓存
+  $ fc-cache -fv
+  ```
 
 * 获取当前可用的所有扩展插件列表
 
