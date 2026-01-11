@@ -149,7 +149,7 @@
 ;; all-the-icons
 (require-package 'all-the-icons)
 
-(use-package vue-lsp
+(use-package lsp-conf
   :load-path "~/.emacs.d/lisp/local/" ; 指定文件所在的路径
   ;; :load-path "～/.emacs.d/config/" ; 如果文件在 config 子目录下
   :ensure nil ; 不要尝试安装这个 "包"
