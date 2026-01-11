@@ -31,6 +31,8 @@
   :hook ((vue-mode . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
+  ;; 自动安装ts-ls,vue-semantic-server等语言服务器,或使用lsp-install-server手动安装
+  (setq lsp-auto-install-server t)
   ;; Vue 专用快捷键前缀
   (setq lsp-keymap-prefix "C-c l")
   ;; Vue 项目性能优化
@@ -238,4 +240,4 @@ defineProps({
             (add-hook 'before-save-hook 'prettier nil t))
           )
 
-(provide 'lsp-conf)
+(provide 'online-code-vue)

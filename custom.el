@@ -1,16 +1,10 @@
+;;; -*- lexical-binding: t -*-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(awesome-tab-dark-selected-background-color "white")
- '(awesome-tab-dark-selected-foreground-color "dark magenta")
- '(column-number-mode t)
- '(cua-mode t nil (cua-base))
  '(custom-enabled-themes '(cyberpunk sanityinc-tomorrow-bright))
- '(display-time-mode t)
- '(font-use-system-font t)
- '(global-display-line-numbers-mode t)
  '(package-selected-packages
    '(add-node-modules-path aggressive-indent alert all-the-icons anzu
                            auto-compile avy browse-kill-ring cask-mode
@@ -65,13 +59,10 @@
                            whole-line-or-region windswap
                            writeroom-mode yaml-mode yard-mode yari
                            zig-mode zig-ts-mode))
- '(scroll-bar-mode nil)
- '(session-use-package t nil (session))
- '(tabbar-separator '(1.5))
- '(tool-bar-mode nil))
+ '(session-use-package t nil (session)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight normal :height 142 :width normal)))))
+ )

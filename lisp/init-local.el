@@ -1,7 +1,6 @@
 (add-to-list 'load-path (expand-file-name "lisp/local" user-emacs-directory))
 
-
-;; 安装melpa插件或设置设置melpa插件默认配置
+;; 安装melpa插件或设置melpa插件默认配置
 (require 'init-online-packages)
 
 ;; 显示时间
@@ -41,23 +40,16 @@
       (with-temp-buffer
         (insert text)
         (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")
+        )
       )
-    )
     (defun xsel-paste-function ()
       (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
         (unless (string= (car kill-ring) xsel-output) xsel-output)
-      )
+        )
       )
     (setq interprogram-cut-function 'xsel-cut-function)
     (setq interprogram-paste-function 'xsel-paste-function)
+    )
   )
-)
-
-;; tabbar
-(require 'awesome-tab)
-(awesome-tab-mode t)
-(when (not (display-graphic-p))
-  (setq frame-background-mode 'dark))
-
 
 (provide 'init-local)
